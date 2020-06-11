@@ -1,0 +1,15 @@
+아침
+git checkout brchB
+git pull origin master
+
+작업 후 틈틈히
+git add.
+git commit -m '메세지'
+git push origin brchB
+
+마지막
+git checkout master
+git pull origin brchB
+git add .
+git commit -m '메세지'
+git push origin master
