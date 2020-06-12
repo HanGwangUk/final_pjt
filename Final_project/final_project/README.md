@@ -81,10 +81,37 @@ $git push origin master
 
 
 
+## 가상환경 생성
+
+```
+1. .gitignore 파일생성 // project 바깥쪽에
+
+2. gitignore.io 사이트
+
+   > venv, django, python
+
+3. python -m venv venv
+
+4. source venv/Scripts/activate
+
+5. pip list로 확인
+
+6. pip freeze => 필요한 다운로드 파일 확인
+
+7. pip freeze > requirements.txt  //다운 받을 파일들 requirements.txt에 저장
+
+8. pip install -r requirements.txt // requirements.txt에 저장된 파일들 다운받기
+```
+
+
+
+
+
 ## API를 통해 받은 데이터 파일 생성
 
 1. The Movie Data Base 에 가입하여 API_KEY 생성
 2. 원하는 데이터를 담은 JSON 파일을 생성할 Python Code 작성
+3. 파이썬 코드 실행하면 JSON파일 생성됨
 
 ```python
 import requests # Python에서 requests를 실행하기 위해서
@@ -131,9 +158,37 @@ for name in movie_list:
 with open('TMDVdata.json', 'w', encoding="utf-8") as f:
     json.dump(data, f, ensure_ascii=False, indent="\t")
 
+[참고사이트]https://datamod.tistory.com/145
 ```
 
 
+
+## 데이터 파일 DB에 load하기
+
+```
+#model.py에 data 모델 정의하기
+$python manage.py loaddata {파일명.json}
+ *주의 : json파일 1.models.py class내 fields 입력순서 맞추기, 
+ 			     2.model, pk, fields설정 필수
+                     {
+                        model: 'app명.class명',
+                        pk: <int형>,
+                        fields: {
+                            ...
+                        }
+
+                     }
+
+#데이터 보는법
+
+1. pip install django-extensions //설치
+2. settings.py에 INSTALLED_APPS에 'django_extensions'정의
+3. shell로 들어가서 확인 
+
+$python manage.py shell
+>>>from app이름.models import 모델명
+>>>모델명.objects.all()
+```
 
 
 

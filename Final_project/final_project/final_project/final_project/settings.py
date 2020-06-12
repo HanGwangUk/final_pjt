@@ -37,21 +37,22 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # 'django.contrib.sites',
     'bootstrap4',
 
     # DRF
-    'rest_framework',
+    # 'rest_framework',
 
     # DRF - token auth
-    'rest_framework.authtoken',
+    # 'rest_framework.authtoken',
 
     # rest_auth
-    'django.contrib.sites',
-    'rest_auth',
-    'allauth',
-    'allauth.account',
-    'rest_auth.registration',
-
+    # 'django.contrib.sites',
+    # 'rest_auth',
+    # 'allauth',
+    # 'allauth.account',
+    # 'rest_auth.registration',
+    'django_extensions',
     # Apps
     'accounts',
     'movies',
@@ -136,4 +137,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
-# AUTH_USER_MODEL = 'accounts.User'
+AUTH_USER_MODEL = 'accounts.User'
+
+# SITE_ID=1
