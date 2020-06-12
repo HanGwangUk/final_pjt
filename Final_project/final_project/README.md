@@ -1,5 +1,11 @@
 # SSAFY 최종 프로젝트
 
+## Trello를 이용한 일정관리
+
+Url : `https://trello.com/b/VvNEXFFk/ssafy-최종-프로젝트`
+
+
+
 ## git을 이용한 공동 작업공간
 
 > git branch 사용
@@ -101,6 +107,8 @@ $git push origin master
 7. pip freeze > requirements.txt  //다운 받을 파일들 requirements.txt에 저장
 
 8. pip install -r requirements.txt // requirements.txt에 저장된 파일들 다운받기
+
+9. deactivate //가상환경 종료 
 ```
 
 
@@ -114,51 +122,185 @@ $git push origin master
 3. 파이썬 코드 실행하면 JSON파일 생성됨
 
 ```python
-import requests # Python에서 requests를 실행하기 위해서
+# 영화 장르 추출
+import requests
+
 import json
+# import pandas as pd
+# from io import StringIO
+
 
 # API 지정
-apikey = "Your_API"
+
+apikey = "91f3048e6d4f7b2729a87dcfbbef1b04"
+
+
 
 # 정보를 알고 싶은 영화 리스트 만들기
+
 movie_list = range(1, 1000)
 
 
 
 # API 지정
+
 api = "https://api.themoviedb.org/3/movie/{movies}?api_key={key}"
+
+
 
 # string.format_map() 매핑용 클래스 만들기
 
 class Default(dict):
+
     def __missing__(self, key):
+
         return key
+
+
+
+# 각 영화의 정보 추출하기
+data = {}
+genres = []
+x = 0
+vis = [0]*99999999
+for name in movie_list:
+    # API의 URL 구성하기
+
+    url = api.format_map(Default(movies=name, key=apikey))
+
+        # print(url)  # 데이터 확인
+
+    # API에 요청을 보내 데이터 추출하기
+
+    r = requests.get(url)  # json 형태의 데이터가 나온다.
+
+        # print(type(r))  # <class 'requests.models.Response'>
+
+    # 결과를 JSON 형식으로 변환하기
+    a = json.loads(r.text)
+    if 'status_code' in a:
+        continue
+    else:
+        b = a['genres']
+        z = {}
+        y = {}
+        x = {}
+
+        for i in range(len(b)):
+            if vis[b[i]['id']] == 0:
+                vis[b[i]['id']] = 1
+                z["fields"] = {"name" : b[i]['name']}
+                y["pk"] = (b[i]['id'])
+                x["model"] = "movies.Genre"
+                mid = dict(y, **z)
+                total = dict(x, **mid)
+                genres.append(total)    
+
+            
+            # print(x)
+            # print(y)
+            # data[x] = y
+       
+    # print('')
+# print('')
+# print(genres)
+ 
+        
+with open('TMDVGenredata.json', 'w', encoding="utf-8") as f:
+    json.dump(genres, f, ensure_ascii=False, indent="\t")
+```
+
+
+
+```python
+# 영화 데이터 JSON 만들기
+import requests
+
+import json
+# import pandas as pd
+# from io import StringIO
+
+
+# API 지정
+
+apikey = "91f3048e6d4f7b2729a87dcfbbef1b04"
+
+
+
+# 정보를 알고 싶은 영화 리스트 만들기
+
+movie_list = range(1, 10000)
+
+
+
+# API 지정
+
+api = "https://api.themoviedb.org/3/movie/{movies}?api_key={key}"
+
+
+
+# string.format_map() 매핑용 클래스 만들기
+
+class Default(dict):
+
+    def __missing__(self, key):
+
+        return key
+
+
 
 # 각 영화의 정보 추출하기
 data = []
-
+x = 0
 for name in movie_list:
-    
     # API의 URL 구성하기
+
     url = api.format_map(Default(movies=name, key=apikey))
 
+        # print(url)  # 데이터 확인
+
     # API에 요청을 보내 데이터 추출하기
+
     r = requests.get(url)  # json 형태의 데이터가 나온다.
 
+        # print(type(r))  # <class 'requests.models.Response'>
+
     # 결과를 JSON 형식으로 변환하기
-    jd = json.loads(r.text)
+    a = json.loads(r.text)
+    # print(type(a))
+    # print(a)
     
-    # 받아올 수 없는 데이터에는 status_code가 출력되어서 없는 것들만 data에 넣기
-    if 'status_code' in jd:
+    b = {}
+    try:
+        if 'status_code' in a:
+            continue
+        else :
+            a['genres'] = [a['genres'][0]["id"]] 
+            del a['belongs_to_collection']
+            del a['budget']
+            del a['imdb_id']
+            del a['homepage']
+            del a['id']
+            del a['production_companies']
+            del a['production_countries']
+            del a['revenue']
+            del a['runtime']
+            del a['spoken_languages']
+            del a['tagline']
+            del a['video']
+            del a['status']
+            b['fields'] = a
+            jd= {"model" : "movies.Movie", "pk": x }
+            c = dict(jd, **b)
+            data.append(c)
+            x += 1
+    except:
         continue
-    else:
-        data.append(jd)
 
-# json 데이터를 json 파일로 생성하기
-with open('TMDVdata.json', 'w', encoding="utf-8") as f:
+        
+
+with open('TMDBdata.json', 'w', encoding="utf-8") as f:
     json.dump(data, f, ensure_ascii=False, indent="\t")
-
-[참고사이트]https://datamod.tistory.com/145
 ```
 
 
@@ -208,7 +350,7 @@ $python manage.py shell
 #### 6월 12일   | 금
 
 - [ ] movie쪽 만들기
-- [ ] 알고리즘 만들기
+- [ ] 알고리즘 만들기(국가별 해결)
 - [ ] 그 전까지한거 체크
 
 #### 6월 13일  |  토
@@ -223,4 +365,6 @@ $python manage.py shell
 - [ ] UCC 만들기
 
 
+
+---
 

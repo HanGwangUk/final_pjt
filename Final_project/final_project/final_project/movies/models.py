@@ -9,7 +9,7 @@ class Genre(models.Model):
 class Movie(models.Model):
     adult = models.BooleanField()
     backdrop_path = models.CharField(max_length=500, null=True)
-    genres = models.ManyToManyField(Genre)
+    genres = models.ManyToManyField(Genre, related_name='movie_genre')
     original_language = models.CharField(max_length=20)
     original_title = models.CharField(max_length=200)
     overview = models.TextField()
@@ -20,27 +20,6 @@ class Movie(models.Model):
     vote_average = models.FloatField()
     vote_count = models.IntegerField()
     
-    # budget = models.IntegerField()
-    # name = models.TextField()
-    # homepage = models.TextField()
-    # belongs_to_collection = models.TextField()
-    # imdb_id= models.TextField()
-    # production_companies =models.TextField()
-    # production_countries = models.TextField()
-    # revenue = models.TextField()
-    # runtime = models.TextField()
-    # spoken_languages = models.TextField()
-    # status = models.TextField()
-    # tagline = models.TextField()
-    # video = models.TextField()
-    # id = models.AutoField(primary_key=True)
-
-
-    
-
-
-    # likes = models.ManyToManyField(settings.AUTH_USER_MODEL)
-
 
 class Review(models.Model):
     title = models.CharField(max_length=100)
