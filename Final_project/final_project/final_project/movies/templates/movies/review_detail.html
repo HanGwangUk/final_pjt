@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+
+
+{% block content %}
+    <h1>Review</h1>
+    <a href="{% url 'movies:detail' movie.pk %}"><input type="button" value="뒤로가기"></a>
+    <h2>review.movie.id : {{review.movie.id}} / movie.pk : {{movie.pk}} / {{review.id}}번째 글:{{review.title}}</h2>
+    
+    <p>{{review.content}}</p>
+    <p>{{review.created_at}}</p>
+
+    {% if request.user == review.user %}
+    <a href="{% url 'movies:review_update' review.movie.id review.pk %}"><input type="button" value="수정하기"></a>
+    <!-- 삭제하기 POST방식으로 보내기 -->
+    <!-- pk순서 중요 : 순서 안지키면 오류뜸 -->
+    <form action="{% url 'movies:review_delete' review.movie.id review.pk %}" method="POST">
+        {% csrf_token %}
+        <button>삭제하기</button>
+    </form>
+    {% endif %}
+    
+
+    <form action="{% url 'movies:comment_create' review.movie.id review.pk %}" method="POST">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <button>댓글쓰기</button>    
+    </form>
+    {% for comment in review.comment_set.all %}
+    내용:{{ comment.content }}
+    <br>
+    username: {{ comment.user }}
+    <br>
+    생성시간:{{ comment.created_at}}
+    <br>
+    {% if request.user == comment.user %}
+    <form action="{% url 'movies:comment_delete' movie.pk review.pk comment.pk %}" method="POST">
+        {% csrf_token %}
+        <button>삭제하기</button>
+    </form>
+    {% endif %}
+    {% endfor %}
+
+{% endblock %}

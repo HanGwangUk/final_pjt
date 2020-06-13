@@ -2,7 +2,8 @@
 {% load bootstrap4 %}
 
 {% block content %}
-<h1>{{movie.title}}</h1>
+<a href="{% url 'movies:index' %}"><input type="button" value="뒤로가기"></a>  
+<h1>{{movie.original_title}}</h1>
 <img src="https://image.tmdb.org/t/p/original/{{movie.backdrop_path}}" alt="">
 <h3>줄거리</h3>
 <hr>
@@ -10,8 +11,29 @@
 <br>
 <p>개봉일 : {{movie.release_date}}</p>
 <p>평점 : {{movie.vote_average}}</p>
+<p>total : {{total}}</p>
+<p>평가한사람{{ movie.rate.rank }}</p>
+<p>점수{{ movie.rate_set.rank.rank }}</p>
 
-<br>
+{% for rank in movie.rate_set.all %}
+{% if request.user.id == rank.user_id %}
+{{ rank.user}} : {{ rank.rank }}
+
+{% endif %}
+{% endfor %}
+
+<hr>
+<form action="{% url 'movies:rank' movie.pk %}" method="POST">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    <button>별점입력</button>
+</form>
+<hr> 
+
+<form action="" method="POST">
+    {% csrf_token %}
+    <button><a href="{% url 'movies:review_create' movie.pk %}">리뷰작성</a></button>
+</form>
 <hr>
 <table class="table">
     <thead>
@@ -23,12 +45,15 @@
         </tr>
     </thead>
     <tbody>
+        {% for review in movie.review_set.all  %}
         <tr>
-            <th scope="row">1</th>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
+            <th scope="row">{{review.id}}</th>
+            <td><a href="{% url 'movies:review_detail' movie.pk review.pk %}">{{review.title}}</a></td>
+            <td>{{review.created_at}}</td>
+            <td>{{review.user}}</td>
         </tr>
+        {% endfor %}
     </tbody>
 </table>
+
 {% endblock %}

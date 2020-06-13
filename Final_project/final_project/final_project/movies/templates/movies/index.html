@@ -4,43 +4,45 @@
 {% block content %}
 <h1>Movie</h1>
 
-<div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+<!-- <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
     <div class="carousel-inner">
-        <div class="carousel-item active">
+        <div class="carousel-item active"> -->
+        <div class="row">
             <h4>프랑스영화</h4>
             <div class="row mb-5">
                 {% for fr_movie in fr_movies %}
-                {% if fr_movie.poster_path != null %}
+                {% if fr_movie.poster_path != null and fr_movie.backdrop_path != null %}
                 <div class="col-3 mb-4">
                     <div class="card">
-                        <img style='height: 350px;' src="https://image.tmdb.org/t/p/w342/{{fr_movie.poster_path}}" class="card-img-top" alt="">
-                    </div>
-                </div>
-                {% endif %}
-                {% endfor %}
-            </div>
-            <h4>프랑스영화 아닌거</h4>
-            <div class="row">
-                {% for en_movie in en_movies %}
-                {% if en_movie.poster_path != null %}
-                <div class="col-3 mb-4">
-                    <div class="card">
-                        <img style='height: 350px;' src="https://image.tmdb.org/t/p/w342/{{en_movie.poster_path}}" class="card-img-top" alt="">
+                        <a href="{% url 'movies:detail' fr_movie.pk %}"><img style='height: 350px;' src="https://image.tmdb.org/t/p/w342/{{fr_movie.poster_path}}" class="card-img-top" alt=""></a>
                     </div>
                 </div>
                 {% endif %}
                 {% endfor %}
             </div>
         </div>
-    </div>
-    <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+        <h4>프랑스영화 아닌거</h4>
+        <div class="row">
+            {% for en_movie in en_movies %}
+            {% if en_movie.poster_path != null and en_movie.backdrop_path != null %}
+            <div class="col-3 mb-4">
+                <div class="card">
+                    <a href="{% url 'movies:detail' en_movie.pk %}"><img style='height: 350px;' src="https://image.tmdb.org/t/p/w342/{{en_movie.poster_path}}" class="card-img-top" alt=""></a>
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+        <!-- </div>
+    </div> -->
+    <!-- <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
         <span class="sr-only">Previous</span>
     </a>
     <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
         <span class="carousel-control-next-icon" aria-hidden="true"></span>
         <span class="sr-only">Next</span>
-    </a>
+    </a> -->
 </div>
 
 
