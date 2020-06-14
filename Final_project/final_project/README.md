@@ -2,7 +2,13 @@
 
 ## Trello를 이용한 일정관리
 
-Url : `https://trello.com/b/VvNEXFFk/ssafy-최종-프로젝트`
+> Url : `https://trello.com/b/VvNEXFFk/ssafy-최종-프로젝트`
+
+
+
+## VS Code Live Share
+
+> Live Share를 통한 협업 
 
 
 
@@ -30,6 +36,12 @@ $git branch
 [참고사이트]
 https://victorydntmd.tistory.com/91
 ```
+
+
+
+## VS Code sqlite DB표 확인
+
+`ctrl + shift + p`  > `>sqlite : open`
 
 
 
@@ -334,7 +346,51 @@ $python manage.py shell
 
 
 
+##  important Code
 
+#### detail.html
+
+**이거로 4시간 헤맴**
+
+>  comment 작성과 비슷하게 Rate는 User와 Movie가 Foreignkey로 연결되어있다
+>
+> Rate와 User는 1:N, Movie와 User도 1:N의 관계를 갖는다
+>
+> 1의 클래스에서 N의 클래스 정보를 가져오고 싶으면 `1의 class.N의class_set` 형식으로 사용해준다
+>
+> 그래서 1:N인 movie와 rate의 관계에서 rate의 정보를 가져오고 싶으면 `movie.rate_set`을 이용하면 된다
+
+
+
+```
+#movies > models.py
+
+class Movie(models.Model):
+    ...
+	
+    vote_user = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="vote_movie", blank=True)
+
+class Comment(models.Model):
+    ...
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    review = models.ForeignKey(Review, on_delete=models.CASCADE)
+
+
+class Rate(models.Model):
+    rank = models.IntegerField()
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
+```
+
+```
+#movies > detail.html
+
+{% for rank in movie.rate_set.all %}
+{% if request.user.id == rank.user_id %}
+{{ rank.user}} : {{ rank.rank }}
+{% endif %}
+{% endfor %}
+```
 
 
 
