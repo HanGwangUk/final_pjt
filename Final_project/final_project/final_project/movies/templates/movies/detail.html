@@ -15,10 +15,10 @@
 <p>평가한사람{{ movie.rate.rank }}</p>
 <p>점수{{ movie.rate_set.rank.rank }}</p>
 {% for genre in genres %}
-<p>장르 : {{ genre }} </p>
+<p>장르 : {{ genre.name }} </p>
 {% endfor %}
 {% for movie_name in movie_names %}
-<p>예림이 {{movie_name.name}} 봐바</p>
+<p>예림이 {{movie_name.title }} 봐바</p>
 {% endfor %}
 {% for g in ge %}
     {{g}}
