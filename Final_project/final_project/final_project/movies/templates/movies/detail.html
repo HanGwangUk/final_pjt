@@ -14,20 +14,37 @@
 <p>total : {{total}}</p>
 <p>평가한사람{{ movie.rate.rank }}</p>
 <p>점수{{ movie.rate_set.rank.rank }}</p>
+{% for genre in genres %}
+<p>장르 : {{ genre }} </p>
+{% endfor %}
+{% for movie_name in movie_names %}
+<p>예림이 {{movie_name.name}} 봐바</p>
+{% endfor %}
+{% for g in ge %}
+    {{g}}
+{% endfor %}
 
 {% for rank in movie.rate_set.all %}
 {% if request.user.id == rank.user_id %}
 {{ rank.user}} : {{ rank.rank }}
-
+<br>
+{{ rank.user_id}}
 {% endif %}
 {% endfor %}
+<br>
+{{ gname }}
 
 <hr>
+{% if request.user_id not in rate %}
 <form action="{% url 'movies:rank' movie.pk %}" method="POST">
     {% csrf_token %}
     {% bootstrap_form form %}
     <button>별점입력</button>
 </form>
+{% else %}
+    <a href="{% url 'movies:rank_cancle' movie.pk %}"><button>입력취소</button></a>
+
+{% endif %}
 <hr> 
 
 <form action="" method="POST">

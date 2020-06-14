@@ -1,14 +1,18 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import user_passes_test
 from .models import *
 from .forms import *
 from django.db.models import Q
+# 슈퍼유저인지 알아보기 위한 데코레이터
 
 #Create your views here.
 def rank(request, movie_pk):
     movie = get_object_or_404(Movie, pk = movie_pk)
     rate = Rate.objects.all()
+    User = get_user_model()
     total = (movie.vote_average) * (movie.vote_count)
     if request.user.is_authenticated:
         if request.user not in movie.vote_user.all():
@@ -19,7 +23,17 @@ def rank(request, movie_pk):
                 rate.movie = movie
                 rate.save()
                 movie.vote_user.add(request.user)
-    
+        # else:
+        #     rate.user = User.objects.get(id=request.user.id)
+        #     a = Rate.objects.get(id=rate.user.id)
+        #     a.delete()
+        #     movie.vote_user.remove(request.user)
+    return redirect('movies:detail', movie.pk)
+
+def rank_cancle(request, movie_pk):
+    movie = get_object_or_404(Movie, pk = movie_pk)
+    rate = Rate.objects.all()
+    rate.delete()
     return redirect('movies:detail', movie.pk)
 
 
@@ -38,17 +52,27 @@ def index(request):
 
 def detail(request, movie_pk):
     movie = get_object_or_404(Movie, pk=movie_pk)
-    genre = Genre.objects.all()
-    rate = Rate.objects.all()
+    rate = Rate.objects.all().filter(user_id=request.user.id)
     form = RatingForm(request.POST)
+    genres = Genre.objects.all().filter(movie_genre=movie_pk)
+    User = get_user_model()
+    movie_names = Movie.objects.all().filter(vote_user=request.user.id)
+    
     total = (movie.vote_average) * (movie.vote_count)
+    # if request.user_id in rate:
+    if movie_pk in rate:
+        gname = movie.movie_genres.name
+    else:
+        gname = ""
+
     context = {
-        'movie':movie,
-        'genre':genre,
-        'total':total,
-        'rate' : rate,
-        'form': form,
-        
+    'movie':movie,
+    'genres':genres,
+    'total':total,
+    'rate' : rate,
+    'form': form,
+    'movie_names':movie_names
+    # 'user_genre' : user_genre,
     }
     return render(request, 'movies/detail.html', context)
 
@@ -141,3 +165,44 @@ def comment_delete(request, movie_pk, review_pk, comment_pk):
     if request.user == comment.user:
         comment.delete()  
     return redirect('movies:review_detail', movie.pk, review.pk)
+
+    ### 슈퍼유저인지 아닌지에 따른 영화 쓰기 ###
+@user_passes_test(lambda u: u.is_superuser)
+def movie_create(request):
+    if request.method == "POST":
+        form = MovieForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('movies:index')
+
+    else:
+        form = MovieForm()
+
+    context = {
+        'form' : form
+    }
+    return render(request, 'movies/m_cre_upd.html', context)
+
+@user_passes_test(lambda u : u.is_superuser)
+@login_required
+def movie_delete(request, movie_pk):
+    movie = get_object_or_404(Movie, pk=movie_pk)
+    movie.delete()
+
+    return redirect('movies:index')
+
+@user_passes_test(lambda u: u.is_superuser)
+@login_required
+def movie_update(request, movie_pk):
+    movie = get_object_or_404(Movie, pk=movie_pk)
+    if request.method == 'POST':
+        form = MovieForm(request.POST, instance=movie)
+        if form.is_valid():
+            form.save()
+            return redirect('movies:index', movie_pk)
+    else:
+        form = MovieForm(instance=movie)
+    context = {
+        'form': form
+    }
+    return render(request, 'movies/m_cre_upd.html', context)
