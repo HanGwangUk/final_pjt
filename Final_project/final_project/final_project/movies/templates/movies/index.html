@@ -2,6 +2,26 @@
 {% load bootstrap4 %}
 
 {% block content %}
+
+<!-- {{ gen_list }}
+{{ gen1}}
+{{ recommend_list}} -->
+    {% for key, value in recommend_list.items %}
+    {% for k in key %}
+        <h1> {{ k.name }}</h1>
+        {% endfor %}
+        <hr>
+    <div class="row mb-5">
+        {% for rec in value %}
+            <div class="col-3 mb-4" >
+                <div class="card">
+                    <a href="{% url 'movies:detail' rec.pk %}"><img style='height: 350px;' src="https://image.tmdb.org/t/p/w342/{{rec.poster_path}}" class="card-img-top" alt=""></a>
+                </div>
+            </div>
+        {% endfor %}
+    <br>
+    {% endfor %}
+    </div>
 <h1>Movie</h1>
 
 <!-- <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">

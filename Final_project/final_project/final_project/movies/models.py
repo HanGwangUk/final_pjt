@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 # Create your models here.
 class Genre(models.Model):
@@ -9,7 +10,7 @@ class Genre(models.Model):
 class Movie(models.Model):
     adult = models.BooleanField()
     backdrop_path = models.CharField(max_length=500, null=True)
-    genres = models.ManyToManyField(Genre, related_name='movie_genre')
+    genres = models.ManyToManyField(Genre, related_name="movie_genre")
     original_language = models.CharField(max_length=20)
     original_title = models.CharField(max_length=200)
     overview = models.TextField(null=True)
@@ -20,7 +21,7 @@ class Movie(models.Model):
     vote_average = models.FloatField(null=True)
     vote_count = models.IntegerField(null=True)
     vote_user = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="vote_movie", blank=True)
-    
+
 
 class Review(models.Model):
     title = models.CharField(max_length=100)
@@ -39,7 +40,7 @@ class Comment(models.Model):
     review = models.ForeignKey(Review, on_delete=models.CASCADE)
 
 class Rate(models.Model):
-    rank = models.IntegerField()
+    rank = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(10)])
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
 
