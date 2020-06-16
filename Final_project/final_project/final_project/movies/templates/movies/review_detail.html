@@ -31,12 +31,14 @@
     <br>
     username: {{ comment.user }}
     <br>
-    생성시간:{{ comment.created_at}}
+    생성시간:{{ comment.created_at }}
+    수정시간:{{ comment.updated_at }}
     <br>
     {% if request.user == comment.user %}
+    <a href="{% url 'movies:comment_update' review.movie.id review.pk comment.pk %}"><input type="button" value="수정"></a>
     <form action="{% url 'movies:comment_delete' movie.pk review.pk comment.pk %}" method="POST">
         {% csrf_token %}
-        <button>삭제하기</button>
+        <button>삭제</button>
     </form>
     {% endif %}
     {% endfor %}

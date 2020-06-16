@@ -4,7 +4,7 @@
 {% block content %}
 <a href="{% url 'movies:index' %}"><input type="button" value="뒤로가기"></a>  
 <h1>{{movie.original_title}}</h1>
-<img src="https://image.tmdb.org/t/p/original/{{movie.backdrop_path}}" alt="">
+<img class="w-75"  src="https://image.tmdb.org/t/p/original/{{movie.backdrop_path}}" alt="">
 <h3>줄거리</h3>
 <hr>
 <div>{{movie.overview}}</div>
@@ -12,11 +12,10 @@
 <p>개봉일 : {{movie.release_date}}</p>
 <p>평점 : {{movie.vote_average}}</p>
 <p>total : {{total}}</p>
-<p>평가한사람{{ movie.rate.rank }}</p>
-<p>점수{{ movie.rate_set.rank.rank }}</p>
 {% for genre in genres %}
 <p>장르 : {{ genre.name }} </p>
 {% endfor %}
+
 {% for movie_name in movie_names %}
 <p>예림이 {{movie_name.title }} 봐바</p>
 {% endfor %}
@@ -24,26 +23,28 @@
     {{g}}
 {% endfor %}
 
-{% for rank in movie.rate_set.all %}
-{% if request.user.id == rank.user_id %}
-{{ rank.user}} : {{ rank.rank }}
 <br>
-{{ rank.user_id}}
-{% endif %}
-{% endfor %}
+
+{{user}}님의 점수 : {{ point }}
+<div class="wrap-star">
+    <h2>Width="30%"</h2>
+    <div class='star-rating'>
+        <span style="width:30%"></span>
+    </div>
+</div>
 <br>
-{{ gname }}
+
 
 <hr>
-{% if request.user_id not in rate %}
-<form action="{% url 'movies:rank' movie.pk %}" method="POST">
-    {% csrf_token %}
-    {% bootstrap_form form %}
-    <button>별점입력</button>
-</form>
+<!-- 조건에 따라 등장 -->
+{% if point == 0 %}
+    <form action="{% url 'movies:rank' movie.pk %}" method="POST">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <button>별점입력</button>
+    </form>
 {% else %}
     <a href="{% url 'movies:rank_cancle' movie.pk %}"><button>입력취소</button></a>
-
 {% endif %}
 <hr> 
 
