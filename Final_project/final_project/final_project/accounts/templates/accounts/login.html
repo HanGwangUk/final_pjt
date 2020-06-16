@@ -2,7 +2,7 @@
 {% load bootstrap4 %} 
 
 {% block content %}
-
+<div class="container"> 
 <form action="" method="POST">
 
     {% csrf_token %}
@@ -19,5 +19,5 @@
     {% csrf_token %}
     <button>회원가입하기</button>
 </form>
-
+</div>
 {% endblock%}

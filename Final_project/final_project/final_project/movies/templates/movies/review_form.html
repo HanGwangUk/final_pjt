@@ -2,6 +2,7 @@
 {% load bootstrap4 %}
 
 {% block content %}
+<div class="container">
     {% if request.resolver_match.url_name == 'review_create' %}
     <h1>리뷰 작성</h1>
     {% else %}
@@ -18,4 +19,5 @@
         <button class='btn btn-primary'>수정하기</button>
         {% endif %}
     </form>
+</div>
 {% endblock %}

@@ -14,12 +14,16 @@ from django.db.models import Q
 
 #Create your views here.
 
+def first_page(request):
+    pass
+    return render(request, 'movies/first_page.html')
+
 def index(request):
     movies = Movie.objects.all()
-    fr_movies = Movie.objects.all().exclude(poster_path__isnull=True, backdrop_path__isnull=True).filter(original_language = 'ko').order_by('?')[:21]
-    en_movies = Movie.objects.all().exclude(poster_path__isnull=True, backdrop_path__isnull=True).filter(~Q(original_language = 'ko'), vote_average__gte=1).order_by('?')[:21]
-   
-   ### 유저가 투표한 장르의 영화들을 가져옴###
+    fr_movies = Movie.objects.all().exclude(poster_path__isnull=True).exclude(backdrop_path__isnull=True).order_by('-popularity')[:21]
+    en_movies = Movie.objects.all().exclude(poster_path__isnull=True).exclude(backdrop_path__isnull=True).order_by('-vote_average')[:21]
+    lists = {fr_movies:'인기 많은 순',  en_movies:'평점 높은 순'}
+    ### 유저가 투표한 장르의 영화들을 가져옴###
     user_movie = Movie.objects.all().filter(vote_user=request.user.id)
     # 영화들이 쿼리셋형태라 mv로 각각의 요소를 가져올 것임
     gen_list = {} # 나의 장르 리스트 // 평점을 표현한 영화의 장르들의 목록. 어떤 장르를 몇개 투표했는지 알기 위해
@@ -40,7 +44,7 @@ def index(request):
     for key, value in gen_list.items(): # 딕셔너리 형태여서 
         if x == 3: # 상위 3개만 출력하기 위해
             break
-        gen_rec_m = Movie.objects.all().exclude(poster_path__isnull=True, backdrop_path__isnull=True).filter(genres = key).order_by('?')[:4] # 장르기반 추천 영화 목록// 장르기준으로 랜덤 4개 출력
+        gen_rec_m = Movie.objects.all().exclude(poster_path__isnull=True, backdrop_path__isnull=True).filter(genres = key).order_by('?')[:21] # 장르기반 추천 영화 목록// 장르기준으로 랜덤 4개 출력
         keyname = Genre.objects.all().filter(id=key) # 장르 이름을 출력해야해서, 장르id를 key로 하고
         recommend_list[keyname] = gen_rec_m # 선별한 쿼리셋을 value로 한 딕셔너리 만듬
         x += 1
@@ -51,11 +55,13 @@ def index(request):
         'en_movies': en_movies,
         'user_movie' : user_movie,
         'gen_list': gen_list,
-        'recommend_list' : recommend_list
+        'recommend_list' : recommend_list,
+        'lists':lists
     }
     return render(request, 'movies/index.html', context)
 
 def detail(request, movie_pk):
+    global total
     movie = get_object_or_404(Movie, pk=movie_pk)
     rate = Rate.objects.all().filter(user_id=request.user.id, movie_id = movie.pk)
     form = RatingForm(request.POST)
@@ -63,11 +69,17 @@ def detail(request, movie_pk):
     user = request.user
     movie_names = Movie.objects.all().filter(vote_user=request.user.id)
     point = 0
+    total = (movie.vote_average) * (movie.vote_count)
     for score in rate:
         if request.user.id == score.user_id and movie_pk == score.movie_id:
             point = int(score.rank)
+    for r in rate:
+        if movie_pk == r.movie_id:
+            total += int(r.rank)
+            movie.vote_count += 1
+    movie.vote_average = total / (movie.vote_count)
+           
 
-    total = (movie.vote_average) * (movie.vote_count)
 
     context = {
     'movie':movie,
@@ -84,10 +96,10 @@ def detail(request, movie_pk):
 ### 영화 평점넣기 ###
 
 def rank(request, movie_pk):
+    global total
     movie = get_object_or_404(Movie, pk = movie_pk)
     rate = Rate.objects.all()
     User = get_user_model()
-    total = (movie.vote_average) * (movie.vote_count)
     if request.user.is_authenticated:
         if request.user not in movie.vote_user.all():
             form = RatingForm(request.POST)
@@ -102,7 +114,7 @@ def rank(request, movie_pk):
     return redirect('movies:detail', movie.pk)
 
 def rank_cancle(request, movie_pk):
-    global point
+    global point, total
     movie = get_object_or_404(Movie, pk = movie_pk)
     rate =  Rate.objects.all().filter(movie_id = movie_pk, user_id = request.user.id)
     rate.delete()

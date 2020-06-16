@@ -1,0 +1,84 @@
+#imageSize {
+    float: left;
+    height: 100px;
+    display: flex;
+    padding-top: 10px;
+    margin-left: 20px;
+    display: block;
+    margin-top: auto;
+    margin-bottom: auto;
+    padding-bottom: 10px;
+
+}
+.MultiCarousel { float: left; overflow: hidden; padding: 15px; width: 100%; position:relative; }
+    .MultiCarousel .MultiCarousel-inner { transition: 1s ease all; float: left; }
+        .MultiCarousel .MultiCarousel-inner .item { float: left;}
+        .MultiCarousel .MultiCarousel-inner .item > div { text-align: center; padding:10px; margin:10px; background:#fd0101ad; color:#666;}
+    .MultiCarousel .leftLst, .MultiCarousel .rightLst { position:absolute; border-radius:50%;top:calc(50% - 20px); }
+    .MultiCarousel .leftLst { left:0; }
+    .MultiCarousel .rightLst { right:0; }
+
+        .MultiCarousel .leftLst.over, .MultiCarousel .rightLst.over { pointer-events: none; background:rgba(245, 245, 245, 0); }
+
+#body {
+    background-color:rgb(66, 92, 6);
+}
+
+.inner-nav-list {
+    color: ivory;
+}
+
+.inner-nav-list a {
+    color: ivory;
+}
+
+#firstPage {
+    background-color: rgba(0, 0, 0, 0);
+    color: red;
+}
+
+#chajjaImage {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.overview1 {
+    display: inline-block; 
+    width: 100%; 
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis;
+
+    white-space: normal; 
+    line-height: 1.2; 
+    height: 3.6em; 
+    text-align: left; 
+    word-wrap: break-word; 
+    display: -webkit-box; 
+    -webkit-line-clamp: 3; 
+    -webkit-box-orient: vertical;
+} 
+
+.my-hr {
+    border: 0;
+    height: 3px;
+    background: rgb(249, 254, 255);  
+}
+
+.detail_page {
+    color:whitesmoke;
+    background-color: rgb(32, 34, 33);
+}
+
+.t{ 
+    font-family: 'East Sea Dokdo', cursive;
+    
+}
+p{
+    font-family: 'Nanum Gothic Coding', monospace;
+}
+
+.c{
+    font-family: 'Nanum Gothic Coding', monospace;
+}
