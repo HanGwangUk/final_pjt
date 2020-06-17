@@ -114,7 +114,7 @@ $git push origin master
 
 5. pip list로 확인
 
-6. pip freeze => 필요한 다운로드 파일 확인
+6. pip freeze // 필요한 다운로드 파일 확인
 
 7. pip freeze > requirements.txt  //다운 받을 파일들 requirements.txt에 저장
 
@@ -358,7 +358,19 @@ $python manage.py shell
 >
 > 1의 클래스에서 N의 클래스 정보를 가져오고 싶으면 `1의 class.N의class_set` 형식으로 사용해준다
 >
-> 그래서 1:N인 movie와 rate의 관계에서 rate의 정보를 가져오고 싶으면 `movie.rate_set`을 이용하면 된다
+> 그래서 1:N인 movie와 rate의 관계에서 movie에서 rate의 정보를 가져오고 싶으면 `movie.rate_set`을 이용하면 된다
+
+```
+Movie와 Rate와 User와의 관계도
+
+1. Movie와 Rate
+	* Movie -----> Rate : 1개의 Movie(영화)에는 여러개의 Rate 데이터(점수)가 존재할 수 있다
+	  		<-----      : 1개의 Rate데이터(점수)에는 1개의 Movie데이터(영화)만 존재할 수 있다
+	  		
+2. User와 Rate
+	* User ------> Rate : 1명의 user는 여러개 Rate(평가)가능
+		   <------ User : 한개의 Rate(평가)에는 1개의 User존재
+```
 
 
 
@@ -391,6 +403,14 @@ class Rate(models.Model):
 {% endif %}
 {% endfor %}
 ```
+
+
+
+
+
+## Card Carousell
+
+> 오픈소스 활용 `https://bootsnipp.com/snippets/zDQkr`
 
 
 

@@ -3,42 +3,63 @@
 
 
 {% block content %}
-    <h1>Review</h1>
-    <a href="{% url 'movies:detail' movie.pk %}"><input type="button" value="뒤로가기"></a>
-    <h2>review.movie.id : {{review.movie.id}} / movie.pk : {{movie.pk}} / {{review.id}}번째 글:{{review.title}}</h2>
-    
-    <p>{{review.content}}</p>
-    <p>{{review.created_at}}</p>
+<div id='review-detail-background' style='min-height: 1000px;'>
+    <div style='min-height:80%'>
+        <div class="flex-left ml-5" style='padding-top: 30px;'>
+            <a href="{% url 'movies:detail' movie.pk %}"><i class="fas fa-arrow-left fa-2x" style='color: tomato'></i></a>
+        </div>
+        
+        <div class='center-effect'>
+            <h1 class='text-center song-font' style='color: rgba(236, 235, 235, 0.966); margin-top:150px;'>Review</h1>
+            <hr style="border: solid 0.5px; color: rgba(245, 245, 245, 0.87); width:250px; margin-bottom: 40px;">
+            <div class='mb-3'>
+                <h5 style='color: rgba(236, 235, 235, 0.966);'>제목 : {{review.title}}</h5>
+            </div>
+            <hr style="border: solid 0.3px; color: rgba(245, 245, 245, 0.582); width:600px;">
+            <p style='color: rgba(255, 255, 255, 0.966); height: 200px;'>{{review.content}}</p>
 
-    {% if request.user == review.user %}
-    <a href="{% url 'movies:review_update' review.movie.id review.pk %}"><input type="button" value="수정하기"></a>
-    <!-- 삭제하기 POST방식으로 보내기 -->
-    <!-- pk순서 중요 : 순서 안지키면 오류뜸 -->
-    <form action="{% url 'movies:review_delete' review.movie.id review.pk %}" method="POST">
-        {% csrf_token %}
-        <button>삭제하기</button>
-    </form>
-    {% endif %}
-    
 
-    <form action="{% url 'movies:comment_create' review.movie.id review.pk %}" method="POST">
-        {% csrf_token %}
-        {% bootstrap_form form %}
-        <button>댓글쓰기</button>    
-    </form>
-    {% for comment in review.comment_set.all %}
-    내용:{{ comment.content }}
-    <br>
-    username: {{ comment.user }}
-    <br>
-    생성시간:{{ comment.created_at}}
-    <br>
-    {% if request.user == comment.user %}
-    <form action="{% url 'movies:comment_delete' movie.pk review.pk comment.pk %}" method="POST">
-        {% csrf_token %}
-        <button>삭제하기</button>
-    </form>
-    {% endif %}
-    {% endfor %}
-
+            <hr style="border: solid 0.3px; color: rgba(245, 245, 245, 0.582); width:600px;"> 
+            <div class='d-flex'>
+                <p style='color: rgba(236, 235, 235, 0.966);' class='mr-auto'>{{review.created_at}}</p>
+                {% if request.user == review.user %}
+                <a href="{% url 'movies:review_update' review.movie.id review.pk %}">
+                    <button class='account-button btn btn-outline-light'> 수정 하기 </button>
+                </a>
+                
+                <!-- 삭제하기 POST방식으로 보내기 -->
+                <!-- pk순서 중요 : 순서 안지키면 오류뜸 -->
+                <form action="{% url 'movies:review_delete' review.movie.id review.pk %}" method="POST">
+                    {% csrf_token %}
+                    <button class='account-button btn btn-outline-light mx-3'> 삭제 하기 </button>
+                </form>
+                {% endif %}
+            </div>
+            
+            
+            <form action="{% url 'movies:comment_create' review.movie.id review.pk %}" method="POST" style='margin-top: 50px;'>
+                {% csrf_token %}
+                {% bootstrap_form form %}
+                <button class='account-button btn btn-outline-light'>댓글 작성</button>   
+            </form>
+            
+            {% for comment in review.comment_set.all %}
+                내용:{{ comment.content }}
+                <br>
+                username: {{ comment.user }}
+                <br>
+                생성시간:{{ comment.created_at }}
+                수정시간:{{ comment.updated_at }}
+                <br>
+                {% if request.user == comment.user %}
+                <a href="{% url 'movies:comment_update' review.movie.id review.pk comment.pk %}"><input type="button" value="수정"></a>
+                <form action="{% url 'movies:comment_delete' movie.pk review.pk comment.pk %}" method="POST">
+                    {% csrf_token %}
+                    <button>삭제</button>
+                </form>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</div>
 {% endblock %}

@@ -39,7 +39,7 @@ def login(request):
 
     return render(request, 'accounts/login.html', context)
 
-@login_required
+
 def logout(request):
     auth_logout(request)
     return redirect('movies:index')

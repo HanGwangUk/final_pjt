@@ -2,20 +2,28 @@
 {% load bootstrap4 %}
 
 {% block content %}
-    {% if request.resolver_match.url_name == 'review_create' %}
-    <h1>리뷰 작성</h1>
-    {% else %}
-    <h1>리뷰 수정</h1>
-    {% endif %}
-    
-    <form action="" method="POST">
-        {% csrf_token %}
-        {%bootstrap_form form%}
-        
+<div id='review-background'>
+    <div class='text-center pt-5 mb-4'>
         {% if request.resolver_match.url_name == 'review_create' %}
-        <button class='btn btn-primary'>작성하기</button>
+        <h1 class='text-center c' style='font-weight: bolder; color: rgba(255, 255, 255, 0.986);'>리뷰 작성</h1>
         {% else %}
-        <button class='btn btn-primary'>수정하기</button>
+        <h1 class='text-center c' style='font-weight: bolder; color: rgba(255, 255, 255, 0.986);'>리뷰 수정</h1>
         {% endif %}
-    </form>
+    </div>
+    <div class='center-effect'>
+        <form action="" method="POST">
+            {% csrf_token %}
+            {%bootstrap_form form%}
+            
+            <div class=' text-center mt-4'>
+                {% if request.resolver_match.url_name == 'review_create' %}
+                <button class='account-button btn btn-outline-light rounded-pill'> 리뷰 작성 </button>
+                {% else %}
+                <button class='account-button btn btn-outline-light rounded-pill'> 수정 하기 </button>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+    
+</div>
 {% endblock %}

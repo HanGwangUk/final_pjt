@@ -3,15 +3,21 @@
 
 {% block content %}
 
-<form action="" method="POST">
+<div id='signup-background' style='height: 610px;'>
+    <div class='center-effect text-effect'>
+        <form action="" method="POST">
 
-    {% csrf_token %}
-    {% bootstrap_form form %}
+            {% csrf_token %}
+            <div>
+            {% bootstrap_form form %}
+            </div>
+            {% buttons %}
+            <div class='text-center'>
+                <button class='account-button btn btn-outline-light rounded-pill'>회원 가입</button>
+            </div>
+            {% endbuttons %}
 
-    {% buttons %}
-    <button>회원 가입</button>
-    {% endbuttons %}
-
-</form>
-
+        </form>
+    </div>
+</div>
 {% endblock %}
