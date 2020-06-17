@@ -16,3 +16,8 @@ class RatingForm(forms.ModelForm):
     class Meta:
         model = Rate
         fields = ['rank']
+
+class MovieForm(forms.ModelForm):
+    class Meta:
+        model = Movie
+        fields = '__all__'

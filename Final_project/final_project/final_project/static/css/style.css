@@ -166,7 +166,7 @@ ul{
     background: url("/static/image/review_background.png");
     background-repeat : no-repeat;
     background-size : cover;
-    height: 610px;
+    min-height: 700px;
 }
 
 #review-background .center-effect {
@@ -183,9 +183,12 @@ ul{
     background-color: black;
     background-repeat : no-repeat;
     background-size : cover;
-    /* min-height: 1000px; */
 }
-
+#id_rank{
+    width:150px;
+    padding:0;
+    margin-right: 10px;
+}
 #review-detail-background .center-effect {
     width: 600px;
     position: absolute;
@@ -195,3 +198,5 @@ ul{
     margin-top: 120px;
 }
 
+
+/* Hover */

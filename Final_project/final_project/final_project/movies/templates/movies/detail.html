@@ -38,21 +38,19 @@
     <hr>
     <!-- 조건에 따라 등장 -->
         {% if point == 0 %}
-        <div class='d-flex flex-row'>
-            <form action="{% url 'movies:rank' movie.pk %}" method="POST"  style='width:150px' class='d-flex flex-row'>
-                {% csrf_token %}
-                {% bootstrap_form form %}
-                <button type="submit" class="btn btn-outline-light c detail-button">별점입력</button>
-            </form>
-        </div>
+        <form action="{% url 'movies:rank' movie.pk %}" method="POST"  style='width:150px' class='d-flex justify-content-between'>
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            <button type="submit" class="btn btn-outline-light h-100 c" style="margin-top: 37px;"><i class="fas fa-star" style='color:rgb(255, 255, 83)'></i></button>
+        </form>
         {% else %}
-            <a href="{% url 'movies:rank_cancle' movie.pk %}"><button type="submit" class="btn btn-light">입력취소</button></a>
+            <a href="{% url 'movies:rank_cancle' movie.pk %}"><button type="submit" class="btn btn-light">평가취소</button></a>
         {% endif %}
         <hr> 
 
         <form action="" method="POST">
             {% csrf_token %}
-            <a href="{% url 'movies:review_create' movie.pk %}"><button type="button" class="btn btn-outline-light c detail-button">리뷰작성</button></a>
+            <a href="{% url 'movies:review_create' movie.pk %}"><button type="button" class="btn btn-outline-light c detail-button mb-1">리뷰작성</button></a>
         </form>
         
         {% if not movie.review_set.all.exists %}
