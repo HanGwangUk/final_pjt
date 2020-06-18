@@ -10,9 +10,14 @@ class ReviewForm(forms.ModelForm):
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
-        fields = ['content']
+        fields = ['comment']
 
 class RatingForm(forms.ModelForm):
     class Meta:
         model = Rate
         fields = ['rank']
+
+class MovieForm(forms.ModelForm):
+    class Meta:
+        model = Movie
+        fields = '__all__'
