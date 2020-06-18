@@ -414,6 +414,12 @@ class Rate(models.Model):
 
 
 
+## CSS
+
+> https://webclub.tistory.com/628
+
+
+
 ---
 
 ## 스케줄링
